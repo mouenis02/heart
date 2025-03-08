@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>For You, Habibi</title>
+    <style>
+        body {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+            background: radial-gradient(circle, #ff758c, #ff7eb3);
+            font-family: 'Dancing Script', cursive;
+            overflow: hidden;
+            position: relative;
+        }
+        canvas {
+            display: none;
+            position: absolute;
+            opacity: 0;
+            transition: opacity 1s ease-in-out;
+        }
+        button {
+            padding: 15px 30px;
+            font-size: 26px;
+            background: linear-gradient(to right, #ff0844, #ffb199);
+            color: white;
+            border: none;
+            cursor: pointer;
+            border-radius: 30px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
+            position: absolute;
+            bottom: 10%;
+            animation: pulse 1.5s infinite;
+        }
+        button:hover {
+            transform: scale(1.1);
+            box-shadow: 0 6px 15px rgba(0, 0, 0, 0.4);
+        }
+        .message {
+            font-size: 50px;
+            color: white;
+            position: absolute;
+            top: 5%;
+            text-shadow: 3px 3px 10px rgba(0, 0, 0, 0.3);
+        }
+        .floating-heart {
+            position: absolute;
+            color: #ff0044;
+            font-size: 24px;
+            animation: floatUp 10s ease-in-out infinite;
+        }
+        @keyframes floatUp {
+            0% { transform: translateY(0) scale(1); opacity: 1; }
+            100% { transform: translateY(-800px) translateX(-50px) scale(0.5); opacity: 0; }
+        }
+        @keyframes pulse {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.1); }
+            100% { transform: scale(1); }
+        }
+        .glow {
+            box-shadow: 0 0 20px rgba(255, 0, 68, 0.8);
+        }
+    </style>
+    <link href="https://fonts.googleapis.com/css2?family=Dancing+Script:wght@700&display=swap" rel="stylesheet">
+</head>
+<body>
+    <div class="message">For You, Habibi <3</div>
+    <button id="loveButton" onclick="startAnimation()">Click here Hadjer 🎀</button>
+    <canvas id="heartCanvas" width="400" height="400"></canvas>
+    <audio id="romanticMusic" src="https://www.bensound.com/bensound-music/bensound-romantic.mp3" preload="auto"></audio>
+    
+    <script>
+        function startAnimation() {
+            let button = document.getElementById("loveButton");
+            let canvas = document.getElementById("heartCanvas");
+            let music = document.getElementById("romanticMusic");
+            
+            button.classList.add("glow");
+            button.style.transition = "all 0.5s ease-in-out";
+            drawHeart();
+            
+            canvas.style.display = "block";
+            setTimeout(() => {
+                canvas.style.opacity = "1";
+            }, 50);
+
+            setInterval(generateFloatingHearts, 500);
+            music.play();
+        }
+
+        function drawHeart() {
+            let canvas = document.getElementById("heartCanvas");
+            let ctx = canvas.getContext("2d");
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            ctx.fillStyle = "#ff0033";
+            
+            let t = 0;
+            function animate() {
+                ctx.clearRect(0, 0, canvas.width, canvas.height);
+                ctx.beginPath();
+                for (let i = 0; i <= t * Math.PI; i += 0.05) {
+                    let x = 200 + 150 * Math.sin(i) ** 3;
+                    let y = 200 - (90 * Math.cos(i) - 40 * Math.cos(2 * i) - 20 * Math.cos(3 * i) - 10 * Math.cos(4 * i));
+                    if (i === 0) {
+                        ctx.moveTo(x, y);
+                    } else {
+                        ctx.lineTo(x, y);
+                    }
+                }
+                ctx.closePath();
+                ctx.fill();
+                ctx.strokeStyle = "#b3001b";
+                ctx.lineWidth = 3;
+                ctx.stroke();
+                
+                if (t < 2) {
+                    t += 0.02;
+                    requestAnimationFrame(animate);
+                }
+            }
+            animate();
+        }
+
+        function generateFloatingHearts() {
+            for (let i = 0; i < 10; i++) {
+                let heart = document.createElement("div");
+                heart.innerHTML = "❤";
+                heart.classList.add("floating-heart");
+                document.body.appendChild(heart);
+                
+                heart.style.left = Math.random() * window.innerWidth + "px";
+                heart.style.top = window.innerHeight + "px";
+                heart.style.animationDuration = (6 + Math.random() * 4) + "s";
+                heart.style.fontSize = (20 + Math.random() * 40) + "px";
+                setTimeout(() => heart.remove(), 12000);
+            }
+        }
+    </script>
+</body>
+</html>
